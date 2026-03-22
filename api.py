@@ -6,15 +6,16 @@ import asyncio
 
 app = FastAPI()
 
-# Konfigurasi CORS agar bisa diakses dari domain website manapun
+# PENTING: Mengizinkan akses dari website (CORS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# KREDENSIAL YANG KAMU BERIKAN
+# DATA NOVUS SOCIETY
 BOT_TOKEN = "8405081792:AAF6LEGqcUWv02vuhZ5cohQAefs0moBg5rg"
 CHANNEL_ID = -1003496635135 
 
@@ -23,9 +24,8 @@ bot = Bot(token=BOT_TOKEN)
 @app.get("/api/novus-member")
 async def get_member_count():
     try:
-        # Mengambil jumlah member secara real-time langsung ke Telegram
+        # Mengambil data langsung dari Telegram
         count = await bot.get_chat_member_count(CHANNEL_ID)
-        
         return {
             "status": "success",
             "member_count": count
@@ -37,5 +37,5 @@ async def get_member_count():
         }
 
 if __name__ == "__main__":
-    # Menjalankan di port 8000
+    # Menjalankan aplikasi api.py di port 8000
     uvicorn.run(app, host="0.0.0.0", port=8000)
